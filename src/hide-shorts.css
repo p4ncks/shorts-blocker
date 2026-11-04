@@ -29,9 +29,12 @@ html.shorts-blocker-on yt-lockup-view-model:has(a[href^="/shorts/"]) {
   display: none !important;
 }
 
-/* Desktop: the Shorts entry in the sidebar and in the mini sidebar */
+/* Desktop: the Shorts entry in the sidebar and in the mini sidebar.
+   YouTube uses the word Shorts in both English and Portuguese. */
 html.shorts-blocker-on ytd-guide-entry-renderer:has(a[href^="/shorts"]),
-html.shorts-blocker-on ytd-mini-guide-entry-renderer:has(a[href^="/shorts"]) {
+html.shorts-blocker-on ytd-guide-entry-renderer:has(> a#endpoint[title="Shorts"]),
+html.shorts-blocker-on ytd-mini-guide-entry-renderer:has(a[href^="/shorts"]),
+html.shorts-blocker-on ytd-mini-guide-entry-renderer[aria-label="Shorts"] {
   display: none !important;
 }
 
