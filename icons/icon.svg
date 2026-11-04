@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <!-- Rounded tile background filling canvas edge to edge -->
+  <rect x="0" y="0" width="128" height="128" rx="28" fill="#0f172a"/>
+  <!-- Vertical video screen (9:16 aspect ratio) -->
+  <rect x="42" y="24" width="44" height="80" rx="8" fill="#1e293b" stroke="#f8fafc" stroke-width="8"/>
+  <!-- Cutout gap behind the slash -->
+  <line x1="26" y1="26" x2="102" y2="102" stroke="#0f172a" stroke-width="16" stroke-linecap="round"/>
+  <!-- Diagonal block slash -->
+  <line x1="26" y1="26" x2="102" y2="102" stroke="#ef4444" stroke-width="10" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "Shorts Blocker",
+  "version": "1.0.0",
+  "description": "Removes YouTube Shorts: hides them on YouTube and opens Shorts links in the normal player.",
+  "permissions": ["storage", "declarativeNetRequest"],
+  "host_permissions": ["*://www.youtube.com/*", "*://m.youtube.com/*"],
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://www.youtube.com/*", "*://m.youtube.com/*"],
+      "js": ["src/shorts-url.js", "src/content.js"],
+      "css": ["src/hide-shorts.css"],
+      "run_at": "document_start"
+    }
+  ],
+  "action": {
+    "default_title": "Shorts Blocker",
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["src/blocked.html"],
+      "matches": ["*://www.youtube.com/*", "*://m.youtube.com/*"]
+    }
+  ]
+}

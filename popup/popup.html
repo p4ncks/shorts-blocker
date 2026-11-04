@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shorts Blocker</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="header">
+    <h1 class="title">Shorts Blocker</h1>
+    <label class="switch" title="Toggle Shorts Blocker">
+      <input type="checkbox" id="enabled-toggle" aria-label="Toggle Shorts Blocker">
+      <span class="slider"></span>
+    </label>
+  </header>
+
+  <main class="content">
+    <fieldset class="mode-group" id="mode-fieldset">
+      <legend class="legend">When opening a Shorts link</legend>
+
+      <label class="radio-option" for="mode-redirect">
+        <input type="radio" name="mode" value="redirect" id="mode-redirect">
+        <span class="radio-text">Redirect to the normal player</span>
+      </label>
+
+      <label class="radio-option" for="mode-block">
+        <input type="radio" name="mode" value="block" id="mode-block">
+        <span class="radio-text">Block the page</span>
+      </label>
+    </fieldset>
+  </main>
+
+  <footer class="footer">
+    <p class="verse">
+      "making the best use of the time, because the days are evil."<br>
+      <span class="verse-ref">Ephesians 5:16 (ESV)</span>
+    </p>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

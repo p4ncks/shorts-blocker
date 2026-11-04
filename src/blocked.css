@@ -1,0 +1,131 @@
+:root {
+  --bg-color: #f4f4f5;
+  --card-bg: #ffffff;
+  --text-color: #18181b;
+  --text-muted: #71717a;
+  --border-color: #e4e4e7;
+  --accent-color: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-text: #ffffff;
+  --icon-color: #94a3b8;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #09090b;
+    --card-bg: #18181b;
+    --text-color: #fafafa;
+    --text-muted: #a1a1aa;
+    --border-color: #27272a;
+    --accent-color: #3b82f6;
+    --accent-hover: #2563eb;
+    --accent-text: #ffffff;
+    --icon-color: #64748b;
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 24px;
+}
+
+.container {
+  width: 100%;
+  max-width: 440px;
+}
+
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
+  padding: 36px 32px 28px;
+  text-align: center;
+}
+
+.icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--icon-color);
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.description {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.action-wrap {
+  margin-bottom: 28px;
+}
+
+.home-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--accent-color);
+  color: var(--accent-text);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: background-color 0.15s ease, transform 0.05s ease;
+}
+
+.home-button:hover {
+  background-color: var(--accent-hover);
+}
+
+.home-button:active {
+  transform: translateY(1px);
+}
+
+.home-button:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 3px;
+}
+
+.footer {
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+.verse {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.verse-ref {
+  display: inline-block;
+  margin-top: 2px;
+  font-style: normal;
+  font-weight: 500;
+}

@@ -1,0 +1,64 @@
+/* Shorts Blocker: hides YouTube Shorts while the extension is on.
+   Every rule starts with html.shorts-blocker-on, so turning the extension off shows everything.
+   Only single cards, Shorts-only shelves, menu entries and tabs are hidden, never a whole
+   section: on search, ytd-item-section-renderer also holds every normal result. */
+
+/* Shorts cards, by element name (desktop and mobile both use the ytm- names) */
+html.shorts-blocker-on ytm-shorts-lockup-view-model,
+html.shorts-blocker-on ytm-shorts-lockup-view-model-v2,
+html.shorts-blocker-on ytd-reel-item-renderer,
+html.shorts-blocker-on ytm-reel-item-renderer {
+  display: none !important;
+}
+
+/* Shorts shelves: search results, Home, Subscriptions, channel Home, watch page */
+html.shorts-blocker-on grid-shelf-view-model:has(ytm-shorts-lockup-view-model),
+html.shorts-blocker-on ytd-reel-shelf-renderer,
+html.shorts-blocker-on ytm-reel-shelf-renderer,
+html.shorts-blocker-on ytd-rich-shelf-renderer[is-shorts],
+html.shorts-blocker-on ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[is-shorts]) {
+  display: none !important;
+}
+
+/* Desktop: grid and list items that link to a Short (Home grid, search, channel, up next) */
+html.shorts-blocker-on ytd-rich-item-renderer:has(a[href^="/shorts/"]),
+html.shorts-blocker-on ytd-video-renderer:has(a[href^="/shorts/"]),
+html.shorts-blocker-on ytd-grid-video-renderer:has(a[href^="/shorts/"]),
+html.shorts-blocker-on ytd-compact-video-renderer:has(a[href^="/shorts/"]),
+html.shorts-blocker-on yt-lockup-view-model:has(a[href^="/shorts/"]) {
+  display: none !important;
+}
+
+/* Desktop: the Shorts entry in the sidebar and in the mini sidebar */
+html.shorts-blocker-on ytd-guide-entry-renderer:has(a[href^="/shorts"]),
+html.shorts-blocker-on ytd-mini-guide-entry-renderer:has(a[href^="/shorts"]) {
+  display: none !important;
+}
+
+/* Channel pages, desktop and mobile: the Shorts tab (tab-title is the English label) */
+html.shorts-blocker-on yt-tab-shape[tab-title="Shorts"] {
+  display: none !important;
+}
+
+/* Desktop search: the "Shorts" filter chip (English label) */
+html.shorts-blocker-on yt-chip-cloud-chip-renderer:has(yt-formatted-string[title="Shorts"]) {
+  display: none !important;
+}
+
+/* Mobile: the Shorts button in the bottom bar */
+html.shorts-blocker-on ytm-pivot-bar-item-renderer:has(.pivot-shorts) {
+  display: none !important;
+}
+
+/* Mobile: video items that link to a Short */
+html.shorts-blocker-on ytm-video-with-context-renderer:has(a[href^="/shorts/"]),
+html.shorts-blocker-on ytm-compact-video-renderer:has(a[href^="/shorts/"]),
+html.shorts-blocker-on ytm-rich-item-renderer:has(a[href^="/shorts/"]),
+html.shorts-blocker-on ytm-media-item:has(a[href^="/shorts/"]) {
+  display: none !important;
+}
+
+/* Cards that content.js marked because they link to a Short in a way CSS cannot see */
+html.shorts-blocker-on [data-shorts-blocked] {
+  display: none !important;
+}
