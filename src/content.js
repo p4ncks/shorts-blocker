@@ -13,6 +13,7 @@
   const MARKER = "data-shorts-blocked";
   const BLOCKED_PAGE = "src/blocked.html";
   const BATCH_DELAY_MS = 200;
+  const FILTER_CHIP_TAG = "yt-chip-cloud-chip-renderer"; // one search filter chip, such as "Shorts"
 
   // Elements that are one video or one menu entry. Never add a section or list here (such as
   // ytd-item-section-renderer): those also hold normal videos, and the whole list would vanish.
@@ -32,6 +33,7 @@
     "ytm-rich-item-renderer",
     "ytm-reel-item-renderer",
     "ytm-media-item",
+    FILTER_CHIP_TAG,
   ]);
   const CARD_SELECTOR = [...CARD_TAGS].join(", ");
   const SHORTS_LINK_SELECTOR = 'a[href*="/shorts"]';
@@ -94,9 +96,19 @@
     return Array.from(links).some((link) => isShortsHref(link.getAttribute("href")));
   }
 
+  // The "Shorts" filter chip has no link and no attribute to match, only its visible label
+  // (English, and also the word YouTube uses in Portuguese).
+  function isShortsChip(chip) {
+    return chip.textContent.trim() === "Shorts";
+  }
+
+  function isShortsCard(card) {
+    return card.localName === FILTER_CHIP_TAG ? isShortsChip(card) : containsShortsLink(card);
+  }
+
   // YouTube reuses card elements for other videos, so each check can also remove the marker.
   function refreshCard(card) {
-    card.toggleAttribute(MARKER, containsShortsLink(card));
+    card.toggleAttribute(MARKER, isShortsCard(card));
   }
 
   function refreshCardsAround(element) {
@@ -122,6 +134,8 @@
 
   // The first change starts a short timer and everything that changes until it fires is checked
   // together, so a busy page is checked at most every BATCH_DELAY_MS, and never scanned whole.
+  // A record's target can be a Text node (a label edited in place). That is fine:
+  // cardsAround walks up from it through parentElement like from any element.
   function onMutations(records) {
     for (const record of records) {
       changedElements.add(record.target);
@@ -139,7 +153,13 @@
     root.classList.add(ON_CLASS);
     if (observer === null) {
       observer = new MutationObserver(onMutations);
-      observer.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ["href"] });
+      observer.observe(root, {
+        subtree: true,
+        childList: true, // cards added or removed
+        attributes: true, // a reused card gets a new link
+        attributeFilter: ["href"],
+        characterData: true, // a reused chip gets a new label, such as Videos becoming Shorts
+      });
     }
     refreshCardsIn(root);
   }

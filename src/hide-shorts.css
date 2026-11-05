@@ -43,7 +43,9 @@ html.shorts-blocker-on yt-tab-shape[tab-title="Shorts"] {
   display: none !important;
 }
 
-/* Desktop search: the "Shorts" filter chip (English label) */
+/* Desktop search: the "Shorts" filter chip, older markup where the label has a title.
+   Newer chips (chip-shape) show the label as plain text with no attribute, so CSS cannot pick
+   them out: content.js marks that chip with data-shorts-blocked (last rule below). */
 html.shorts-blocker-on yt-chip-cloud-chip-renderer:has(yt-formatted-string[title="Shorts"]) {
   display: none !important;
 }
