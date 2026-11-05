@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Generate extension PNG icons from SVG using macOS built-in tools (sips).
 
-Renders the SVG directly edge-to-edge with transparent corners (no white
-document background), then validates and visually previews each icon.
+Renders toolbar sizes (16, 32, 48) edge-to-edge, and pads the 128 size with a
+16px transparent border to center the 96x96 artwork per store guidelines.
 """
 
 from pathlib import Path
@@ -101,14 +101,29 @@ def inspect_and_preview(png_path: Path, show_ascii: bool = False) -> None:
     coverage = len(opaque_points) / (w * h)
     print(f"[{png_path.name}] {w}x{h} px: bounds=({min_x}, {min_y}) to ({max_x}, {max_y}), coverage={coverage:.1%}, corner_alphas={corner_alphas}")
 
-    # Verify edge-to-edge coverage: should reach borders 0 and w-1/h-1
-    if min_x != 0 or min_y != 0 or max_x != (w - 1) or max_y != (h - 1):
-        print(f"Error: icon does not fill canvas edge to edge: bounds=({min_x}, {min_y}) to ({max_x}, {max_y})", file=sys.stderr)
-        sys.exit(1)
+    # Verify bounds: 128 icon has 16px padding per store guidelines, toolbar icons fill edge to edge
+    if w == 128 and h == 128:
+        if min_x != 16 or min_y != 16 or max_x != 111 or max_y != 111:
+            print(f"Error: 128 icon artwork is not centered with 16px padding: bounds=({min_x}, {min_y}) to ({max_x}, {max_y})", file=sys.stderr)
+            sys.exit(1)
+        border_alphas = [
+            pixels[(y * w + x) * bpp + 3]
+            for y in range(h)
+            for x in range(w)
+            if x < 16 or x > 111 or y < 16 or y > 111
+        ]
+        if any(a != 0 for a in border_alphas):
+            print("Error: 128 icon border is not fully transparent", file=sys.stderr)
+            sys.exit(1)
+    else:
+        # Verify edge-to-edge coverage: should reach borders 0 and w-1/h-1
+        if min_x != 0 or min_y != 0 or max_x != (w - 1) or max_y != (h - 1):
+            print(f"Error: icon does not fill canvas edge to edge: bounds=({min_x}, {min_y}) to ({max_x}, {max_y})", file=sys.stderr)
+            sys.exit(1)
 
-    # Verify corner transparency: squircle corners must be transparent
-    if any(a > 50 for a in corner_alphas):
-        print(f"Warning: corners are not transparent: {corner_alphas}", file=sys.stderr)
+        # Verify corner transparency: squircle corners must be transparent
+        if any(a > 50 for a in corner_alphas):
+            print(f"Warning: corners are not transparent: {corner_alphas}", file=sys.stderr)
 
     if show_ascii:
         print(f"--- ASCII Preview of {png_path.name} ---")
@@ -134,6 +149,15 @@ def inspect_and_preview(png_path: Path, show_ascii: bool = False) -> None:
         print("------------------------------------------")
 
 
+# Pad the 128 icon with transparent borders to meet Chrome Web Store guidelines.
+def pad_store_icon(png_path: Path, canvas_size: int = 128) -> None:
+    subprocess.run(
+        ["sips", "-p", str(canvas_size), str(canvas_size), str(png_path), "--out", str(png_path)],
+        check=True,
+        capture_output=True,
+    )
+
+
 def generate_icons(repo_root: Path) -> None:
     icons_dir = repo_root / "icons"
     svg_path = icons_dir / "icon.svg"
@@ -147,11 +171,14 @@ def generate_icons(repo_root: Path) -> None:
     # Convert SVG directly to PNG at each target size using macOS sips
     for size in SIZES:
         target_png = icons_dir / f"icon-{size}.png"
+        render_size = 96 if size == 128 else size
         subprocess.run(
-            ["sips", "-s", "format", "png", "-z", str(size), str(size), str(svg_path), "--out", str(target_png)],
+            ["sips", "-s", "format", "png", "-z", str(render_size), str(render_size), str(svg_path), "--out", str(target_png)],
             check=True,
             capture_output=True,
         )
+        if size == 128:
+            pad_store_icon(target_png, canvas_size=128)
         inspect_and_preview(target_png, show_ascii=(size == 128 or size == 32))
 
 
